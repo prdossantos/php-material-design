@@ -9,8 +9,7 @@ php:
   
 before_script:
   - composer self-update
-  - composer install --dev
-  - composer update
+  - composer install
 
 script: phpunit
 
