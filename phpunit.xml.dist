@@ -1,0 +1,17 @@
+<phpunit
+  colors="true"
+  verbose="true"
+  bootstrap="bootstrap.php">
+  <testsuites>
+    <testsuite name="PHP Material Design">
+        <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist>
+      <directory>src/PMD</directory>
+    </whitelist>
+  </filter>
+
+</phpunit>
