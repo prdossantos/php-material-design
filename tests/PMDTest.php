@@ -14,14 +14,14 @@ class PMDTest extends TestCase {
 		$this->assertEquals('src/Templates', PMD::getConfig('template_di'));
 	}
 
-	/*public function testPrepare()
+	public function testPrepare()
 	{
 		$card = PMD::prepare('Cards','default')
 		->set('class','myclass')
 		->get();
 		$this->assertNotNull($card);
 	}
-*/
+
 	public function testRender()
 	{
 		$this->assertNotNull(PMD::render('Cards',['title'=>'PHP']));
@@ -33,6 +33,6 @@ class PMDTest extends TestCase {
 		->set('class','myclass')
 		->addAttributeTo('h2',['data-id'=>'asdf'])
 		->get();
-		$this->assertNull($card);	
+		$this->assertNotNull($card);	
 	}
 }
