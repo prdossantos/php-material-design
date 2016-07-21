@@ -11,7 +11,8 @@
             "src"
         ],
         "psr-4": {
-            "PMD\\": "src/PMD/"
+            "PMD\\": "src/PMD/",
+            "PHPLJ\\": "src/PHPLikeJquery/"
         }
     },
     "require": {

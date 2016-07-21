@@ -2,15 +2,16 @@
 namespace PMD;
 
 use PMD\Template;
+use PHPLJ\Dom;
 
 class PMD {
 
 	private static $instance;
 	private static $config;
 	private static $setContainer;
-	private static $appendToContainer;
-	public static $component;
-	public static $name;
+	private static $addToContainer;
+	private static $component;
+	private static $name;
 
 	private static function getInstance()
 	{
@@ -70,8 +71,32 @@ class PMD {
 		return self::getInstance();
 	}
 
+	public function addAttributeTo($el,$args=array())
+	{
+		if(!$el) throw new \ErrorException("Element is required", 1);
+		if(!$args) throw new \ErrorException("Argument 2 is required", 1);
+		
+		self::$addToContainer[$el] = $args;
+		
+		return self::getInstance();
+	}
+
 	public function get($config=array())
 	{
-		return self::render(self::$component,self::$name,self::$setContainer,$config);
+		$html = self::render(self::$component,self::$name,self::$setContainer,$config);
+
+		if( self::$addToContainer ) {
+			foreach (self::$addToContainer as $el => $arr) {
+				$dom = new Dom($html);
+				if($arr) {
+					foreach ($arr as $k => $v) {
+						$dom->find($el)->attr($k,$v);
+						$html = $dom->output;
+					}
+				}
+			}
+		}
+		
+		return $html;
 	}
 }
