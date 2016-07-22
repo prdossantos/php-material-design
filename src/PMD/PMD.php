@@ -8,14 +8,25 @@ class PMD {
 
 	private static $instance;
 	private static $config;
-	private static $setContainer;
-	private static $addToContainer;
+	private static $setContainer = array();
+	private static $html;
 	private static $component;
 	private static $name;
 
 	private static function getInstance()
 	{
 		return !self::$instance ? new PMD : self::$instance;
+	}
+
+	/**
+	 * Método de entrada na lib \Dom
+	 * @param  string $html html que irá sera manipulado
+	 * @return instance     \Dom
+	 */
+	public static function find($el)
+	{
+		$dom = new Dom(self::render(self::$component,self::$name,self::$setContainer,self::$config));
+		return $dom->find($el);
 	}
 
 	public static function setConfig($arg1,$arg2='')
@@ -54,10 +65,11 @@ class PMD {
 		return $template->get($component,$name,$args);
 	}
 
-	public static function prepare($component,$name='default')
+	public static function prepare($component,$name='default',$config=array())
 	{
 		self::$component = $component;
 		self::$name = $name;
+		self::$config = $config;
 
 		return self::getInstance();
 	}
@@ -71,32 +83,8 @@ class PMD {
 		return self::getInstance();
 	}
 
-	public function addAttributeTo($el,$args=array())
+	public function get()
 	{
-		if(!$el) throw new \ErrorException("Element is required", 1);
-		if(!$args) throw new \ErrorException("Argument 2 is required", 1);
-		
-		self::$addToContainer[$el] = $args;
-		
-		return self::getInstance();
-	}
-
-	public function get($config=array())
-	{
-		$html = self::render(self::$component,self::$name,self::$setContainer,$config);
-
-		if( self::$addToContainer ) {
-			foreach (self::$addToContainer as $el => $arr) {
-				$dom = new Dom($html);
-				if($arr) {
-					foreach ($arr as $k => $v) {
-						$dom->find($el)->attr($k,$v);
-						$html = $dom->output;
-					}
-				}
-			}
-		}
-		
-		return $html;
+		return self::render(self::$component,self::$name,self::$setContainer,self::$config);
 	}
 }

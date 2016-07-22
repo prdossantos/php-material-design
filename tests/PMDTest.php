@@ -14,25 +14,22 @@ class PMDTest extends TestCase {
 		$this->assertEquals('src/Templates', PMD::getConfig('template_di'));
 	}
 
-	public function testPrepare()
+	public function testPrepareWithoutSet()
+	{
+		$card = PMD::prepare('Cards','default')->find('.mdl-card__menu')->attr('id','test123')->render(true);
+		$this->assertNull($card);
+	}
+
+	public function testPrepareWSet()
 	{
 		$card = PMD::prepare('Cards','default')
 		->set('class','myclass')
-		->get();
-		$this->assertNotNull($card);
+		->find('h2')->addClass('asdf');
+		$this->assertNotNull($card);	
 	}
 
 	public function testRender()
 	{
 		$this->assertNotNull(PMD::render('Cards',['title'=>'PHP']));
-	}
-
-	public function testAddAttributeTo()
-	{
-		$card = PMD::prepare('Cards','default')
-		->set('class','myclass')
-		->addAttributeTo('h2',['data-id'=>'asdf'])
-		->get();
-		$this->assertNotNull($card);	
 	}
 }
