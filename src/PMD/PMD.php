@@ -3,6 +3,8 @@ namespace PMD;
 
 use PMD\Template;
 use PHPLJ\Dom;
+use PMD\Components\Cards;
+use PMD\Components\Grid;
 
 class PMD {
 
@@ -87,4 +89,23 @@ class PMD {
 	{
 		return self::render(self::$component,self::$name,self::$setContainer,self::$config);
 	}
+
+	/**
+	 * Retorno das funções de componentes
+	 * Ex.:
+	 * -----
+	 * PMD::card()
+	 * ->add('button',['name'=>'asdf'])
+	 * ->add('title','asdf')
+	 * -----
+	 * $grid = PMD::grid(3)
+	 * ->add('Cards', function($card){
+	 * 		$card->add('button')
+	 * })
+	 * 
+	 * 
+	 */
+	public static function cards($arg='') { return new Cards($arg); }
+	public static function grid($arg=0) { return new Grid($arg); }
+
 }
