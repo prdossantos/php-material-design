@@ -98,9 +98,7 @@ class Dom {
 
 	public function attr($attr,$val='')
 	{
-		if(empty($this->items)) throw new \ErrorException("Error Processing Request", 1);
-
-		if(is_array($this->items)) {
+		if($this->items) {
 			foreach ($this->items as $element) {
 				if(!$val)
 					return $element->getAttribute($attr);
@@ -115,10 +113,7 @@ class Dom {
 
 	public function html($val='')
 	{
-		if(empty($this->items)) throw new \ErrorException("Error Processing Request", 1);
-
-		if(is_array($this->items)) {
-
+		if($this->items) {
 			foreach ($this->items as $element) {
 				if(!$val)
 					return trim($element->nodeValue);
@@ -126,9 +121,161 @@ class Dom {
 				$element->nodeValue = $val;
 			}
 			$this->output = $this->cleanOut($this->dom->saveHTML());
+		} else {
+			return null;
 		}
 
 		return $this;	
+	}
+
+	/**
+	 * Função para manipulação do atributo style
+	 * @param    string|array $arg1 caso string, será uma propriedade. Caso array o index será uma propriedade
+	 *                              e o valor será o valor da propriedade. Ex: String('color'). Array(['color'=>'white'])
+	 * @param    string $arg2  	apenas será utilizado quando o $arg1 for uma string e será o valor do atributo
+	 * @return   Instance       \Dom
+	 */
+	public function css($arg1,$arg2='')
+	{
+		if( $this->items ) {
+			foreach ( $this->items as $element) {
+				if( is_array($arg1) && $arg1 ) {
+					$css = ''; $end = ','; $i=0;
+					foreach ($arg1 as $key => $value) {
+						if(count($arg1) == ++$i) $end = '';
+						$css .= $key.':'.$value.$end;
+					}
+					$element->setAttribute('style',$css);
+				} else if( is_string($arg1) && $arg1 && $arg2 ) {
+					$element->setAttribute('style',$arg1.':'.$arg2);
+				}
+			}
+			$this->output = $this->cleanOut($this->dom->saveHTML());
+		}
+		return $this;
+	}
+
+	/**
+	 * Adiciona uma nova classe ao elemento
+	 * @param string $class classe a ser adicionada
+	 * @return instance \Dom
+	 */
+	public function addClass($class)
+	{
+		if(empty($class)) throw new \ErrorException("Argument 1 is required", 1);
+		
+		if( $this->items ) {
+			foreach ( $this->items as $element) {
+				$oldClass = str_replace($class,'',$element->getAttribute('class'));
+				$element->setAttribute('class',$oldClass.' '.$class);
+			}
+			$this->output = $this->cleanOut($this->dom->saveHTML());
+		}
+		return $this;
+	}
+
+	/**
+	 * Remove uma classe do elemento
+	 * @param string $class classe a ser removida
+	 * @return instance \Dom
+	 */
+	public function removeClass($class)
+	{
+		if(empty($class)) throw new \ErrorException("Argument 1 is required", 1);
+		
+		if( $this->items ) {
+			foreach ( $this->items as $element) {
+				$oldClass = trim(str_replace($class,'',$element->getAttribute('class')));
+				$element->setAttribute('class',$oldClass);
+			}
+			$this->output = $this->cleanOut($this->dom->saveHTML());
+		}
+		return $this;
+	}
+
+	/**
+	 * Verifica se a classe existe no elemento
+	 * @param string $class classe a ser adicionada
+	 * @return instance \Dom
+	 */
+	public function hasClass($class)
+	{
+		if(empty($class)) throw new \ErrorException("Argument 1 is required", 1);
+		
+		if( $this->items ) {
+			$items = $this->items;
+			$this->items = [];
+			foreach ( $items as $element) {
+				$oldClass = $element->getAttribute('class');
+				if(strpos($oldClass, $class) !== false)
+					$this->items[] = $element;
+			}
+		}
+		return $this;
+	}
+
+	/**
+	 * Adiciona um conteúdo ao final do elemento 
+	 * @param  string $html conteúdo que será adicionado, aceita html e texto.
+	 * @return instance     \Dom
+	 */
+	public function append($html)
+	{
+		if(empty($html)) throw new \ErrorException("Argument 1 is required", 1);
+		
+		if( $this->items ) {
+			foreach ( $this->items as $element) {
+				$node = $this->dom->createTextNode($html);
+				$element->appendChild($node);
+			}
+			$this->output = $this->cleanOut($this->dom->saveHTML());
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Adiciona um conteúdo no inicio do elemento 
+	 * @param  string $html conteúdo que será adicionado, aceita html e texto.
+	 * @return instance     \Dom
+	 */
+	public function prepend($html)
+	{
+		if(empty($html)) throw new \ErrorException("Argument 1 is required", 1);
+		
+		if( $this->items ) {
+			foreach ( $this->items as $element) {
+				$node = $this->dom->createTextNode($html);
+				$child = $element->firstChild;
+				$element->insertBefore($node,$child);
+			}
+			$this->output = $this->cleanOut($this->dom->saveHTML());
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Imprime ou retorna o html tratado.
+	 * @param    boolean $print caso TRUE será impresso na tela
+	 * @return   string         apenas se a $print for FALSE
+	 */
+	public function render($print=false)
+	{
+		if ( $print )
+			print $this->output;
+		else
+			return $this->output;
+	}
+
+	/**
+	 * Imprime ou retorna o html tratado.
+	 * @param    boolean $print caso TRUE será impresso na tela
+	 * @return   string         apenas se a $print for FALSE
+	 */
+	public function save()
+	{
+		return $this->output;
 	}
 
 	public function cleanOut($str)
