@@ -105,7 +105,7 @@ class PMD {
 	 * 
 	 * 
 	 */
-	public static function cards($arg='') { return new Cards($arg); }
-	public static function grid($arg=0) { return new Grid($arg); }
+	public static function cards($args='') { return new Cards($args); }
+	public static function grid($args=0) { return new Grid($args); }
 
 }

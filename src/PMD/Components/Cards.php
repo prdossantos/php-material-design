@@ -10,10 +10,15 @@ class Cards extends Component{
 
 	public function __construct($args,$callback=null)
 	{
+
 		$this->args = $args;
 		$this->callback = $callback;
-		if(is_callable($this->callback))
-			$callback($this->args);
+
+		$this->register('Cards',$args);
+
+		if( is_callable($this->callback) ) {
+			$callback($this);
+		}
 	}
 
 }

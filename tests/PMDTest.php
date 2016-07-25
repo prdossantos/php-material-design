@@ -35,8 +35,12 @@ class PMDTest extends TestCase {
 
 	public function testCard()
 	{
-		PMD::grid('grid: 3')->add('Cards','cards: 4',function($card){
-			print $card.' >>!';
+		/**
+		 * Retornar html a cada componente chamado,
+		 * verificar o load de html no file do twig 
+		 */
+		PMD::grid(['cols'=>15])->add('Cards',['qtd'=>4],function($card){
+			print_r($card->components);
 		});
 	}
 }

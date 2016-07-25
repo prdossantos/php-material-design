@@ -5,12 +5,13 @@ use PMD\Component;
 
 class Grid extends Component{
 
-	public $arg;
+	public $grids;
 
-	public function __construct($arg=0)
+	public function __construct($grids=0)
 	{
-		$this->arg = $arg;
-		print $arg;
+		$this->grids = $grids;
+
+		$this->register('Grid',$grids);
 	}
 
 }
