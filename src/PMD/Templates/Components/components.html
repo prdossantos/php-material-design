@@ -1,0 +1,43 @@
+{% macro button(text, class, icon, id) %}
+    <button id="{{id}}" class="mdl-button {{class}}">{{icon}}{{text}}</button>
+{% endmacro %}
+
+{% macro link(text, class, href, id) %}
+    <a id="{{id}}" href="{{href}}" class="{{class}} mdl-button">{{text}}</a>
+{% endmacro %}	
+
+{% macro card(title, content, actions, class, id) %}
+	{% import _self as components %}
+    <div class="{{class}} mdl-card">
+	    {% if title %}
+	        <div class="mdl-card__title">
+	            <h2 class="mdl-card__title-text">
+	                {{ title }}
+	            </h2>
+	        </div>
+	    {% endif %}
+	    {% if content %}
+	        <div class="mdl-card__supporting-text">
+	            {{content}}
+	        </div>
+	    {% endif %}
+	    {% if actions.links %}
+	        <div class="mdl-card__actions {{ actions.links.class}}">
+	            {% for link in actions.links %}
+	                {% if link.text %}
+	                    {{ components.link(link.text,link.class,link.href,link.id) }}
+	                {% endif %} 
+	            {% endfor %}
+	        </div>
+	    {% endif %}
+	    {% if actions.menu %}
+	        <div class="mdl-card__menu {{ actions.menu.class}}">
+	            {% if actions.menu.buttons %}
+	                {% for button in actions.menu.buttons %}
+	                    {{ components.button(button.text,button.class,button.icon,button.id) }}
+	                {% endfor %}
+	            {% endif %}
+	        </div>
+	    {% endif %}
+	</div>
+{% endmacro %}

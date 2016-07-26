@@ -24,6 +24,8 @@ class Template
 		);
 		$this->loader = new \Twig_Loader_Filesystem($this->template_dir);
 		$this->twig = new \Twig_Environment($this->loader, $this->config);
+		$escaper = new \Twig_Extension_Escaper('html');
+		$this->twig->addExtension($escaper);
 	}
 
 	public function set($component,$name,$template,$create_dir=false)
@@ -51,10 +53,10 @@ class Template
 		return $this->template;
 	}
 
-	public function get($component,$name='default',$args=array())
+	public function get($component,$args=array())
 	{
 		$this->component = $component; 
-		$this->name = $name; 
+		$this->name = (isset($args['pmd_component_type'])) ? $args['pmd_component_type'] : 'default';
 		
 		$name = ($this->name) ? $this->name.'.html' : strtolower($this->component).'.html';
 		$name = str_replace('.html.html', '.html', $name);
@@ -65,5 +67,12 @@ class Template
 			throw new \ErrorException("Template {$this->file} not found", 1);
 		}
 		return $this->twig->render($this->file,$args);
+	}
+
+	public function cleanOut($str)
+	{
+		$str = str_replace(array('&lt;','&gt;'),array('<','>'),$str);
+
+		return $str;
 	}
 }

@@ -4,43 +4,30 @@ use PMD\PMD;
 
 class PMDTest extends TestCase {
 	
-	public function testSetConfig()
-	{
-		$this->assertNotNull(PMD::setConfig('template_di','src/Templates'));
-	}
-
-	public function testGetConfig()
-	{
-		$this->assertEquals('src/Templates', PMD::getConfig('template_di'));
-	}
-
-	public function testPrepareWithoutSet()
-	{
-		$card = PMD::prepare('Cards','default')->find('.mdl-card__menu')->attr('id','test123')->render();
-		$this->assertNotNull($card);
-	}
-
-	public function testPrepareWSet()
-	{
-		$card = PMD::prepare('Cards','default')
-		->set('class','myclass')
-		->find('h2')->addClass('asdf');
-		$this->assertNotNull($card);	
-	}
-
 	public function testRender()
 	{
-		$this->assertNotNull(PMD::render('Cards',['title'=>'PHP']));
+		$this->assertNotNull(PMD::render('Cards:default',['title'=>'PHP']));
 	}
 
-	public function testCard()
+	public function testPrepare()
 	{
-		/**
-		 * Retornar html a cada componente chamado,
-		 * verificar o load de html no file do twig 
-		 */
-		PMD::grid(['cols'=>15])->add('Cards',['qtd'=>4],function($card){
-			print_r($card->components);
-		});
+		$card = PMD::render('Cards:default',[
+			'title'=>'PHP é',
+			'actions'=>[
+				'links'=>[
+					'class' => 'sup-class',
+					['text'=>'teste','href'=>'/#'],
+					['text'=>'asdf 2','href'=>'/#asdf']
+				],
+				'menu'=>[
+					'buttons' =>[
+						['text'=>'asdfasdf']
+					]
+				]
+			]
+		]);
+		$grid = PMD::prepare('Grid',['content'=>$card]);
+		// print $card;
+		$this->assertNotNull($grid->get());
 	}
 }
