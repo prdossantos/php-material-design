@@ -1,8 +1,13 @@
-{% macro button(text, class, icon, id) %}
+
+{% macro badge(text, class, icon, id, attr) %}	
+	<div class=" {% if icon %} material-icons {% endif %} mdl-badge" data-badge="{{attr}}">{{icon}}{{text}}</div>
+{% endmacro %}
+
+{% macro button(text, class, icon, id, attr) %}
     <button id="{{id}}" class="mdl-button {{class}}">{{icon}}{{text}}</button>
 {% endmacro %}
 
-{% macro link(text, class, href, id) %}
+{% macro link(text, class, href, id, attr) %}
     <a id="{{id}}" href="{{href}}" class="{{class}} mdl-button">{{text}}</a>
 {% endmacro %}	
 
@@ -40,4 +45,35 @@
 	        </div>
 	    {% endif %}
 	</div>
+{% endmacro %}
+
+{% macro dialog(title, content, actions, class, id) %}
+	<dialog class="mdl-dialog">
+		{% if title %}
+	    	<h4 class="mdl-dialog__title">{{ title }}</h4>
+		{% endif %}
+		{% if content %}
+	    	<div class="mdl-dialog__content">
+	      		{{ content|raw }}
+	    	</div>
+	    {% endif %}
+	    {% if actions.links %}
+	        <div class="mdl-dialog__actions {{ actions.links.class}}">
+	            {% for link in actions.links %}
+	                {% if link.text %}
+	                    {{ components.link(link.text,link.class,link.href,link.id) }}
+	                {% endif %} 
+	            {% endfor %}
+	        </div>
+	    {% endif %}
+	    {% if actions.buttons %}
+	        <div class="mdl-dialog__actions {{ actions.buttons.class}}">
+	            {% for button in actions.buttons %}
+	                {% if button.text %}
+	                	{{ components.button(button.text,button.class,button.icon,button.id) }}
+	                {% endif %} 
+	            {% endfor %}
+	        </div>
+	    {% endif %}
+  </dialog>
 {% endmacro %}
