@@ -28,7 +28,30 @@ class PMD{
 		return $template->prepare();
 	}
 
-	public static function cards($type='',$args=array()) { return $this->prepare('Cards:{$type}',$args); }
-	public static function grid($type='',$args=array()) { return $this->prepare('Grid:{$type}',$args); }
+	public static function button($type='',$args=array(),$showIn=true) { 
+		$component = self::prepare('Button:'.$type,$args); 
+		if($showIn) return $component->get(); 
+		else return $component; 
+	}
+	public static function link($type='',$args=array(),$showIn=true) { 
+		$component = self::prepare('Link:'.$type,$args); 
+		if($showIn) return $component->get(); 
+		else return $component; 
+	}
+	public static function cards($type='',$args=array(),$showIn=true) { 
+		$component = self::prepare('Cards:'.$type,$args); 
+		if($showIn) return $component->get(); 
+		else return $component; 
+	}
+	public static function grid($type='',$args=array(),$showIn=true) { 
+		$component = self::prepare('Grid:'.$type,$args); 
+		if($showIn) return $component->get(); 
+		else return $component; 
+	}
+	public static function dialog($type='',$args=array(),$showIn=true) { 
+		$component = self::prepare('Dialog:'.$type,$args); 
+		if($showIn) return $component->get(); 
+		else return $component; 
+	}
 
 }

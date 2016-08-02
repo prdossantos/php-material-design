@@ -30,4 +30,32 @@ class PMDTest extends TestCase {
 		// print $card;
 		$this->assertNotNull($grid->get());
 	}
+
+	public function testButton()
+	{
+		$component = PMD::button('default',['title'=>'teste']);
+		$this->assertNotNull($component);
+	}
+	public function testLink()
+	{
+		$component = PMD::link('default',['title'=>'teste']);
+		$this->assertNotNull($component);
+	}
+	public function testCard()
+	{
+		$component = PMD::cards('default',['title'=>'teste']);
+		$this->assertNotNull($component);
+	}
+
+	public function testGrid()
+	{
+		$component = PMD::grid('default',['title'=>'teste']);
+		$this->assertNotNull($component);
+	}
+
+	public function testDialog()
+	{
+		$component = PMD::dialog('default',['title'=>'teste']);
+		$this->assertNotNull($component);
+	}
 }
